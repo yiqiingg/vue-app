@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="small-container">
     <h1>Visualize a Shapefile from Berkeley</h1>
-    <employee-form @add:shapefile="addShapefile" />
+    <employee-form @add:shapefile="createUpload" />
     <employee-table
       :employees="employees"
       @delete:employee="deleteEmployee"
@@ -11,6 +11,9 @@
 </template>
 
 <script>
+import dotenv from 'dotenv';
+
+dotenv.config();
 import EmployeeTable from '@/components/EmployeeTable.vue';
 import EmployeeForm from '@/components/EmployeeForm.vue';
 
@@ -57,9 +60,43 @@ export default {
         );
         const data = await response.json();
         console.log(data, 'hiii this is the data');
-        this.shapefiles = [...this.shapefiles, data];
+        return data;
       } catch (error) {
         console.error(error);
+      }
+    },
+    async createUpload(file) {
+      try {
+        this.shapefiles = [...this.shapefiles, file];
+        const credentials = await this.addShapefile(file);
+        const response = await fetch(
+          'https://api.mapbox.com/uploads/v1/yiqingggg?access_token=sk.eyJ1IjoieWlxaW5nZ2dnIiwiYSI6ImNrdG51MXM3OTA2OW4zMHA5dDZmdjVoZTUifQ.q2dxmwAQjk9fg9LABjU97g',
+          {
+            body: {
+              url: `http://${credentials.bucket}.s3.amazonaws.com/${credentials.key}`,
+              tileset: `yiqingggg.${file.name}`,
+            },
+            headers: {
+              'Access-Control-Allow-Headers':
+                'Access-Control-Allow-Headers, Access-Control-Allow-Origin, Content-Type, Access-Control-Request-Headers',
+              //'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers',
+              'Access-Control-Allow-Origin': `http://localhost:8080/`,
+              // 'Access-Control-Allow-Credentials': 'true',
+              'Access-Control-Request-Methods': 'GET,HEAD,OPTIONS,POST,PUT',
+              // 'Access-Control-Request-Methods': 'POST',
+              'Access-Control-Request-Headers':
+                'Access-Control-Allow-Headers, Access-Control-Allow-Origin, Content-Type, Access-Control-Request-Headers',
+              // 'Content-Type, Access-Control-Allow-Headers',
+              // 'Cache-Control': 'no-cache',
+              'Content-Type': 'application/json',
+            },
+            method: 'POST',
+          }
+        );
+        const data = await response.json();
+        console.log(data, 'upload dataaaa');
+      } catch (error) {
+        console.log(error);
       }
     },
     async deleteEmployee(id) {

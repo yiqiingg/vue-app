@@ -1,0 +1,5 @@
+curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d '{
+  "url": "http://tilestream-tilesets-production.s3.amazonaws.com/c2/_pending/2ehhjichbn22yq92ttjf5wtkc/yiqingggg",
+  "tileset": "yiqingggg.traverse-bay",
+  "name": "Traverse Bay"
+}' 'https://api.mapbox.com/uploads/v1/yiqingggg?access_token=sk.eyJ1IjoieWlxaW5nZ2dnIiwiYSI6ImNrdG51MXM3OTA2OW4zMHA5dDZmdjVoZTUifQ.q2dxmwAQjk9fg9LABjU97g'
