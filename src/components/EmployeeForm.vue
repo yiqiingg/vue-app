@@ -1,16 +1,10 @@
 <template>
   <div id="employee-form">
-    <form @submit.prevent="handleSubmit">
+    <form @submit.prevent="createFileUpload">
       <label>Shapefile name</label>
-      <input :class="{ 'has-error': submitting && invalidEmail }" type="text" />
+      <input v-model="shapefile.name" type="text" />
       <label>Upload Shapefile</label>
-      <input
-        :class="{ 'has-error': submitting && invalidEmail }"
-        type="file"
-        name="uploadFile"
-        accept=".shp"
-        required
-      />
+      <input type="file" @change="uploadFileSave" name="uploadFile" required />
       <p v-if="error && submitting" class="error-message">
         ❗Please fill out all required fields
       </p>
@@ -38,26 +32,33 @@ export default {
   },
   computed: {
     invalidName() {
-      console.log(this.employee.name);
-      return this.employee.name === '';
-    },
-
-    invalidEmail() {
-      return this.employee.email === '';
+      console.log(this.shapefile.name);
+      return this.shapefile.name === '';
     },
   },
   methods: {
-    handleSubmit() {
+    uploadFileSave(event) {
+      console.log(event.target.files[0]);
+      this.shapefile.file = event.target.files[0];
+    },
+    async createFileUpload() {
+      console.log(this.shapefile);
       this.submitting = true;
       this.clearStatus();
+      const MY_ACCESS_TOKEN =
+        'sk.eyJ1IjoieWlxaW5nZ2dnIiwiYSI6ImNrdG51MXM3OTA2OW4zMHA5dDZmdjVoZTUifQ.q2dxmwAQjk9fg9LABjU97g';
+      const mbxUploads = require('@mapbox/mapbox-sdk/services/uploads');
+      const mbxClient = require('@mapbox/mapbox-sdk');
+      const baseClient = mbxClient({ accessToken: MY_ACCESS_TOKEN });
+      const uploadsClient = mbxUploads(baseClient);
 
-      // if (this.invalidName || this.invalidEmail) {
-      //   this.error = true;
-      //   return;
-      // }
-
-      this.$emit('add:shapefile', this.shapefile);
-      this.$refs.first.focus();
+      const AWS = require('aws-sdk');
+      const getCredentials = () => {
+        return uploadsClient
+          .createUploadCredentials()
+          .send()
+          .then((response) => response.body);
+      };
       this.shapefile = {
         name: '',
         file: '',
@@ -65,6 +66,39 @@ export default {
       this.error = false;
       this.success = true;
       this.submitting = false;
+      const putFileOnS3 = (credentials) => {
+        const s3 = new AWS.S3({
+          accessKeyId: credentials.accessKeyId,
+          secretAccessKey: credentials.secretAccessKey,
+          sessionToken: credentials.sessionToken,
+          region: 'us-east-1',
+        });
+        return s3
+          .putObject({
+            Bucket: credentials.bucket,
+            Key: credentials.key,
+            Body: this.shapefile.file,
+          })
+          .promise();
+      };
+      const credentials = await getCredentials();
+      putFileOnS3(credentials);
+      console.log(credentials);
+      // const myUsername = 'yiqingggg';
+      // const myTileset = 'myTileset';
+
+      await uploadsClient
+        .createUpload({
+          tileset: `yiqingggg.myTileset`,
+          url: credentials.url,
+          name: `test`,
+        })
+        .send()
+        .then((response) => {
+          const upload = response.body;
+          console.log(upload);
+        });
+      console.log('done');
     },
 
     clearStatus() {

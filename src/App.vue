@@ -16,7 +16,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 import EmployeeTable from '@/components/EmployeeTable.vue';
 import EmployeeForm from '@/components/EmployeeForm.vue';
-
 export default {
   name: 'app',
   components: {
@@ -65,40 +64,73 @@ export default {
         console.error(error);
       }
     },
-    async createUpload(file) {
-      try {
-        this.shapefiles = [...this.shapefiles, file];
-        const credentials = await this.addShapefile(file);
-        const response = await fetch(
-          'https://api.mapbox.com/uploads/v1/yiqingggg?access_token=sk.eyJ1IjoieWlxaW5nZ2dnIiwiYSI6ImNrdG51MXM3OTA2OW4zMHA5dDZmdjVoZTUifQ.q2dxmwAQjk9fg9LABjU97g',
-          {
-            body: {
-              url: `http://${credentials.bucket}.s3.amazonaws.com/${credentials.key}`,
-              tileset: `yiqingggg.${file.name}`,
-            },
-            headers: {
-              'Access-Control-Allow-Headers':
-                'Access-Control-Allow-Headers, Access-Control-Allow-Origin, Content-Type, Access-Control-Request-Headers',
-              //'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers',
-              'Access-Control-Allow-Origin': `http://localhost:8080/`,
-              // 'Access-Control-Allow-Credentials': 'true',
-              'Access-Control-Request-Methods': 'GET,HEAD,OPTIONS,POST,PUT',
-              // 'Access-Control-Request-Methods': 'POST',
-              'Access-Control-Request-Headers':
-                'Access-Control-Allow-Headers, Access-Control-Allow-Origin, Content-Type, Access-Control-Request-Headers',
-              // 'Content-Type, Access-Control-Allow-Headers',
-              // 'Cache-Control': 'no-cache',
-              'Content-Type': 'application/json',
-            },
-            method: 'POST',
-          }
-        );
-        const data = await response.json();
-        console.log(data, 'upload dataaaa');
-      } catch (error) {
-        console.log(error);
-      }
-    },
+    // async stageShapefile(file) {
+    //   try {
+    //     const response = await fetch(
+    //       `http://${credentials.bucket}.s3.amazonaws.com/${credentials.key}`,
+    //       {
+    //         method: 'PUT',
+    //         body: JSON.stringify(file),
+    //         headers: { 'Content-type': 'application/json; charset=UTF-8' },
+    //       }
+    //     );
+    //     const data = await response.json();
+    //     console.log(data, 'hiii this is the data');
+    //     return data;
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // },
+    // async createFileUpload(file) {
+    //   try {
+    //     console.log(file)
+    //     const MY_ACCESS_TOKEN = 'sk.eyJ1IjoieWlxaW5nZ2dnIiwiYSI6ImNrdG51MXM3OTA2OW4zMHA5dDZmdjVoZTUifQ.q2dxmwAQjk9fg9LABjU97g';
+    //     const mbxUploads = require('@mapbox/mapbox-sdk/services/uploads');
+    //     const mbxClient = require('@mapbox/mapbox-sdk');
+    //     const baseClient = mbxClient({ accessToken: MY_ACCESS_TOKEN });
+    //     const uploadsClient = mbxUploads(baseClient);
+
+    //     const AWS = require('aws-sdk');
+    //     const getCredentials = () => {
+    //         return uploadsClient
+    //           .createUploadCredentials()
+    //           .send()
+    //           .then(response => response.body);
+    //     }
+    //     const putFileOnS3 = (credentials) => {
+    //     const s3 = new AWS.S3({
+    //     accessKeyId: credentials.accessKeyId,
+    //     secretAccessKey: credentials.secretAccessKey,
+    //     sessionToken: credentials.sessionToken,
+    //     region: 'us-east-1'
+    //   });
+    //   return s3.putObject({
+    //     Bucket: credentials.bucket,
+    //     Key: credentials.key,
+    //     Body: this.file,
+    //   }).promise();
+    // };
+
+    // const credentials = await getCredentials();
+    // putFileOnS3(credentials);
+    // // const myUsername = 'yiqingggg';
+    // // const myTileset = 'myTileset';
+
+    // uploadsClient.createUpload({
+    //     tileset: `yiqingggg.myTileset`,
+    //     url: credentials.url,
+    //     name: `${this.file.name}`,
+    //   })
+    //     .send()
+    //     .then(response => {
+    //       const upload = response.body;
+    //       console.log(upload);
+    //     });
+    //   console.log('done')
+    //   } catch (error) {
+    //     console.error(error);
+    //   } 
+    // },
     async deleteEmployee(id) {
       try {
         await fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
