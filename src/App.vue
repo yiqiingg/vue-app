@@ -1,17 +1,5 @@
 <template>
   <div id="app" class="small-container">
-    <head>
-      <meta charset="utf-8" />
-      <title>Display a map on a webpage</title>
-      <meta
-        name="viewport"
-        content="initial-scale=1,maximum-scale=1,user-scalable=no"
-      />
-      <link
-        href="https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.css"
-        rel="stylesheet"
-      />
-    </head>
     <h1>Visualize a Shapefile from Berkeley</h1>
     <employee-form @add:shapefile="createUpload" />
     <employee-table
@@ -19,7 +7,7 @@
       @delete:employee="deleteEmployee"
       @edit:employee="editEmployee"
     />
-    <map />
+    <map-component />
   </div>
 </template>
 
