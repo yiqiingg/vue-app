@@ -46,7 +46,7 @@ export default {
       this.submitting = true;
       this.clearStatus();
       const MY_ACCESS_TOKEN =
-        'sk.eyJ1IjoieWlxaW5nZ2dnIiwiYSI6ImNrdG51MXM3OTA2OW4zMHA5dDZmdjVoZTUifQ.q2dxmwAQjk9fg9LABjU97g';
+        'sk.eyJ1IjoieWlxaW5nZ2dnIiwiYSI6ImNrdHhma3ZiYzBrMXQybnRoemFkOTlhMW4ifQ.Fe0XhvYKsc5A9MmE8xD7OQ';
       const mbxUploads = require('@mapbox/mapbox-sdk/services/uploads');
       const mbxClient = require('@mapbox/mapbox-sdk');
       const baseClient = mbxClient({ accessToken: MY_ACCESS_TOKEN });
@@ -90,7 +90,8 @@ export default {
       await uploadsClient
         .createUpload({
           tileset: `yiqingggg.myTileset`,
-          url: credentials.url,
+          url:
+            'https://tilestream-tilesets-production.s3.amazonaws.com/80/_pending/fkfic8hpqn72iph132jlfxtkc/yiqingggg',
           name: `test`,
         })
         .send()

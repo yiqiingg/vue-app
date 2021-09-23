@@ -11,24 +11,8 @@
       </thead>
       <tbody>
         <tr v-for="employee in employees" :key="employee.id">
-          <td v-if="editing === employee.id">
-            <input type="text" v-model="employee.name" />
-          </td>
-          <td v-else>{{ employee.name }}</td>
-          <td v-if="editing === employee.id">
-            <input type="text" v-model="employee.email" />
-          </td>
-          <td v-else>{{ employee.email }}</td>
-          <td v-if="editing === employee.id">
-            <button @click="editEmployee(employee)">Save</button>
-            <button class="muted-button" @click="editing = null">Cancel</button>
-          </td>
-          <td v-else>
-            <button @click="editMode(employee.id)">Edit</button>
-            <button @click="$emit('delete:employee', employee.id)">
-              Delete
-            </button>
-          </td>
+          <td>{{ employee.name }}</td>
+          <td>{{ employee.email }}</td>
         </tr>
       </tbody>
     </table>

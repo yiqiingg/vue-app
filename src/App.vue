@@ -1,5 +1,17 @@
 <template>
   <div id="app" class="small-container">
+    <head>
+      <meta charset="utf-8" />
+      <title>Display a map on a webpage</title>
+      <meta
+        name="viewport"
+        content="initial-scale=1,maximum-scale=1,user-scalable=no"
+      />
+      <link
+        href="https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.css"
+        rel="stylesheet"
+      />
+    </head>
     <h1>Visualize a Shapefile from Berkeley</h1>
     <employee-form @add:shapefile="createUpload" />
     <employee-table
@@ -7,20 +19,34 @@
       @delete:employee="deleteEmployee"
       @edit:employee="editEmployee"
     />
+    <map />
   </div>
 </template>
 
 <script>
 import dotenv from 'dotenv';
 
+// import mapboxgl from 'mapbox-gl'; // or "const mapboxgl = require('mapbox-gl');"
+
+// mapboxgl.accessToken =
+//   'pk.eyJ1IjoieWlxaW5nZ2dnIiwiYSI6ImNrdHhmY2hpMzBqemEybnRobWl1enBza3oifQ.dFwEcCgHZuW6IdqjLu4DnA';
+// new mapboxgl.Map({
+//   container: 'map', // container ID
+//   style: 'mapbox://styles/mapbox/streets-v11', // style URL
+//   center: [-74.5, 40], // starting position [lng, lat]
+//   zoom: 9, // starting zoom
+// });
+
 dotenv.config();
 import EmployeeTable from '@/components/EmployeeTable.vue';
 import EmployeeForm from '@/components/EmployeeForm.vue';
+import MapComponent from '@/components/MapComponent.vue';
 export default {
   name: 'app',
   components: {
     EmployeeTable,
     EmployeeForm,
+    MapComponent,
   },
   data() {
     return {
@@ -129,7 +155,7 @@ export default {
     //   console.log('done')
     //   } catch (error) {
     //     console.error(error);
-    //   } 
+    //   }
     // },
     async deleteEmployee(id) {
       try {
@@ -177,6 +203,16 @@ export default {
 </script>
 
 <style>
+body {
+  margin: 0;
+  padding: 0;
+}
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
 button {
   background: #009435;
   border: 1px solid #009435;
