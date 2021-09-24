@@ -1,14 +1,28 @@
 <template>
   <div id="employee-table">
-    <p v-if="employees.length < 1" class="empty-table">No employees</p>
+    <p v-if="employees.length < 1" class="empty-table">
+      No employees
+    </p>
     <table v-else>
       <thead>
         <tr>
-          <th>Shapefile name</th>
+          <th>Employee name</th>
           <th>Employee email</th>
           <th>Actions</th>
         </tr>
       </thead>
+      <!-- <tbody> -->
+      <!-- <tr> 
+          <td>Richard Hendricks</td>
+          <td>richard@piedpiper.com</td>
+        </tr>
+        <tr>
+          <td>Bertram Gilfoyle</td>
+          <td>gilfoyle@piedpiper.com</td>
+        </tr>
+        <tr>
+          <td>Dinesh Chugtai</td>
+          <td>dinesh@piedpiper.com</td> -->
       <tbody>
         <tr v-for="employee in employees" :key="employee.id">
           <td v-if="editing === employee.id">
@@ -24,18 +38,23 @@
             <button class="muted-button" @click="editing = null">Cancel</button>
           </td>
           <td v-else>
-            <button @click="editMode(employee.id)">Edit</button>
+            <button @click="editMode(employee)">Edit</button>
             <button @click="$emit('delete:employee', employee.id)">
               Delete
             </button>
           </td>
         </tr>
       </tbody>
+      <!-- </tr> -->
+      <!-- </tbody> -->
     </table>
   </div>
 </template>
 
 <script>
+//   export default {
+//     name: 'employee-table',
+//   }
 export default {
   name: 'employee-table',
   props: {
@@ -48,6 +67,7 @@ export default {
   },
   methods: {
     editMode(employee) {
+      // this.editing = id
       this.cachedEmployee = Object.assign({}, employee);
       this.editing = employee.id;
     },
@@ -64,4 +84,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+button {
+  margin: 0 0.5rem 0 0;
+}
+</style>
