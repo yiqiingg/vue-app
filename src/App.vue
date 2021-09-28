@@ -1,33 +1,40 @@
 <template>
   <div id="app" class="small-container">
     <h1>Visualize a Shapefile from Berkeley</h1>
-
-    <shapefile-form @add:shapefile="addShapefile" />
-    <div id="map-component" />
-    <shapefile-table :shapefile="shapefile" />
+    <employee-form @add:shapefile="createUpload" />
+    <employee-table
+      :employees="employees"
+      @delete:employee="deleteEmployee"
+      @edit:employee="editEmployee"
+    />
+    <map-component />
   </div>
 </template>
 
 <script>
-let tilesetid;
-const MY_ACCESS_TOKEN =
-  'sk.eyJ1IjoieWlxaW5nZ2dnIiwiYSI6ImNrdHhma3ZiYzBrMXQybnRoemFkOTlhMW4ifQ.Fe0XhvYKsc5A9MmE8xD7OQ';
-const mbxUploads = require('@mapbox/mapbox-sdk/services/uploads');
-const mbxClient = require('@mapbox/mapbox-sdk');
-const baseClient = mbxClient({ accessToken: MY_ACCESS_TOKEN });
-const uploadsClient = mbxUploads(baseClient);
-// let uploadId;
-import mapboxgl from 'mapbox-gl';
-const AWS = require('aws-sdk');
-mapboxgl.accessToken =
-  'pk.eyJ1IjoieWlxaW5nZ2dnIiwiYSI6ImNrdTM4c29waDFscDQycG93NDduNXVlOHMifQ.T2MhPxJH1MHmgO-Qc6unjQ';
-import ShapefileTable from '@/components/ShapefileTable.vue';
-import ShapefileForm from '@/components/ShapefileForm.vue';
+import dotenv from 'dotenv';
+
+// import mapboxgl from 'mapbox-gl'; // or "const mapboxgl = require('mapbox-gl');"
+
+// mapboxgl.accessToken =
+//   'pk.eyJ1IjoieWlxaW5nZ2dnIiwiYSI6ImNrdHhmY2hpMzBqemEybnRobWl1enBza3oifQ.dFwEcCgHZuW6IdqjLu4DnA';
+// new mapboxgl.Map({
+//   container: 'map', // container ID
+//   style: 'mapbox://styles/mapbox/streets-v11', // style URL
+//   center: [-74.5, 40], // starting position [lng, lat]
+//   zoom: 9, // starting zoom
+// });
+
+dotenv.config();
+import EmployeeTable from '@/components/EmployeeTable.vue';
+import EmployeeForm from '@/components/EmployeeForm.vue';
+import MapComponent from '@/components/MapComponent.vue';
 export default {
   name: 'app',
   components: {
-    ShapefileForm,
-    ShapefileTable,
+    EmployeeTable,
+    EmployeeForm,
+    MapComponent,
   },
   data() {
     return {
@@ -175,32 +182,21 @@ export default {
     //     console.error(error);
     //   }
     // },
-    // async editEmployee(id, updatedEmployee) {
-    //   // this.employees = this.employees.map(employee =>
-    //   //   employee.id === id? updatedEmployee : employee
-    //   // )
-    //   try {
-    //     const response = await fetch(
-    //       `https://jsonplaceholder.typicode.com/users/${id}`,
-    //       {
-    //         method: 'PUT',
-    //         body: JSON.stringify(updatedEmployee),
-    //         headers: { 'Content-type': 'application/json; charset=UTF-8' },
-    //       }
-    //     );
-    //     const data = await response.json();
-    //     this.employees = this.employees.map((employee) =>
-    //       employee.id === id ? data : employee
-    //     );
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // },
   },
 };
 </script>
 
 <style>
+body {
+  margin: 0;
+  padding: 0;
+}
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
 button {
   background: #009435;
   border: 1px solid #009435;
